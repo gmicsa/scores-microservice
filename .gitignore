@@ -15,3 +15,13 @@ hs_err_pid*
 *.iml
 
 out
+
+#files needed for angular2, npm, TS
+src/main/resources/static/node_modules
+src/main/resources/static/typings
+src/main/resources/static/app/*.js
+src/main/resources/static/app/*.map
+
+static
+
+build
