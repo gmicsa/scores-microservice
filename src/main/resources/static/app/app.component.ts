@@ -3,7 +3,7 @@ import {ScoresService} from "./app.service";
 import {Score} from "./score";
 
 @Component({
-    selector: 'my-app',
+    selector: 'scores-app',
     template: `<h1>{{title}}</h1>
     <h2>Today matches:</h2>
     <div *ngIf="error" class="error">
@@ -19,7 +19,8 @@ import {Score} from "./score";
         </div>
     </div>
     <br/>
-    <button (click)="reload()">Reload</button>
+    <button md-raised-button class="md-raised md-primary" (click)="reload()">Reload</button>
+    <br/>
     `,
     providers: [ScoresService]
 })

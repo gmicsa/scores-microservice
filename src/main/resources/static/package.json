@@ -17,6 +17,7 @@
     "@angular/core": "2.0.0-rc.6",
     "@angular/forms": "2.0.0-rc.6",
     "@angular/http": "2.0.0-rc.6",
+    "@angular2-material/core": "^2.0.0-alpha.8-1",
     "@angular/platform-browser": "2.0.0-rc.6",
     "@angular/platform-browser-dynamic": "2.0.0-rc.6",
     "@angular/router": "3.0.0-rc.2",
@@ -27,7 +28,8 @@
     "systemjs": "0.19.27",
     "zone.js": "^0.6.17",
     "angular2-in-memory-web-api": "0.0.18",
-    "bootstrap": "^3.3.6"
+    "bootstrap": "^3.3.6",
+    "ng2-material": "^0.6.1"
   },
   "devDependencies": {
     "concurrently": "^2.2.0",
