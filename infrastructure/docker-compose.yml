@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  scores-microservice:
+    build: ..
+    container_name: scores-microservice1
+    ports:
+     - "8080:8080"
+    links:
+     - mongodb
+  mongodb:
+    image: mongo:3.0.2
+    container_name: mongodb

@@ -2,3 +2,4 @@ spring:
   data:
     mongodb:
       database: scores
+      host: mongodb
