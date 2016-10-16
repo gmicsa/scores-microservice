@@ -3,6 +3,7 @@ version: '2'
 services:
   scores-microservice:
     build: ..
+    image: gmicsa/scores-microservice:0.0.1
     container_name: scores-microservice1
     ports:
      - "8080:8080"
