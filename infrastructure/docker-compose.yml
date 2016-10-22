@@ -12,3 +12,5 @@ services:
   mongodb:
     image: mongo:3.0.2
     container_name: mongodb
+    ports:
+     - "27017:27017"
