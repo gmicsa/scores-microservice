@@ -9,8 +9,10 @@ services:
      - "8080:8080"
     links:
      - mongodb
+    restart: always
   mongodb:
     image: mongo:3.0.2
     container_name: mongodb
     ports:
      - "27017:27017"
+    restart: always
