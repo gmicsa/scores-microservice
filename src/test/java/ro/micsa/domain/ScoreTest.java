@@ -17,9 +17,7 @@ public class ScoreTest {
 
     @Test(expected = ConstraintViolationException.class)
     public void emptyFields() {
-        Score.Builder builder = new Score.Builder();
-
-        builder.build();
+        Score.builder().build();
     }
 
     @Test
@@ -33,7 +31,7 @@ public class ScoreTest {
             }
         });
 
-        new Score.Builder()
+        Score.builder()
                 .team1("Barcelona")
                 .team2("Steaua")
                 .date(new Date())

@@ -49,7 +49,7 @@ public class ScoresResourceIntegrationTest {
     }
 
     private Score buildScore(String team1, String team2, int score1, int score2) {
-        return new Score.Builder()
+        return Score.builder()
                 .team1(team1)
                 .team2(team2)
                 .date(new Date())
