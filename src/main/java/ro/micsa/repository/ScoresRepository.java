@@ -1,12 +1,11 @@
 package ro.micsa.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 import ro.micsa.domain.Score;
 
-import java.util.List;
+public interface ScoresRepository extends ReactiveMongoRepository<Score, String> {
 
-public interface ScoresRepository extends MongoRepository<Score, String> {
-
-    List<Score> findByTeam1OrTeam2(String team1, String team2);
+    Flux<Score> findByTeam1OrTeam2(String team1, String team2);
 
 }

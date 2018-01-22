@@ -3,6 +3,7 @@ package ro.micsa.domain;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -10,11 +11,12 @@ import javax.validation.Validation;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
 
+@Document
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -32,7 +34,7 @@ public class Score {
     String team2;
 
     @NotNull(message = "ro.micsa.scores.validation.empty_date")
-    Date date;
+    LocalDate date;
 
     @Min(value = 0, message = "ro.micsa.scores.validation.negative_goals1")
     byte goals1;
@@ -42,7 +44,7 @@ public class Score {
 
     @Builder
     private Score(String id, String team1, String team2,
-                 Date date, byte goals1, byte goals2) {
+                 LocalDate date, byte goals1, byte goals2) {
         this.id = id;
         this.team1 = team1;
         this.team2 = team2;

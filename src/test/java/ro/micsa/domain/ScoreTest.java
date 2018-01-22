@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDate;
 import java.util.Date;
 
 //TODO upgrade to JUnit5 late 2016
@@ -34,7 +35,7 @@ public class ScoreTest {
         Score.builder()
                 .team1("Barcelona")
                 .team2("Steaua")
-                .date(new Date())
+                .date(LocalDate.now())
                 .goals1((byte) 3)
                 .goals2((byte) -1)
                 .build();

@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ro.micsa.domain.Score;
 import ro.micsa.repository.ScoresRepository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ScoresResourceIntegrationTest {
 
         Score scoreDinamoForesta = buildScore("Dinamo", "Foresta", 4, 5);
 
-        scoresRepository.saveAll(List.of(scoreBarcaSteaua, scoreDinamoForesta));
+        scoresRepository.saveAll(List.of(scoreBarcaSteaua, scoreDinamoForesta)).blockLast();
 
         ResponseEntity<List<Score>> response = restTemplate
                 .exchange(SCORES_BASE_URL + "?team=Steaua", GET, null, new ParameterizedTypeReference<List<Score>>(){});
@@ -52,7 +53,7 @@ public class ScoresResourceIntegrationTest {
         return Score.builder()
                 .team1(team1)
                 .team2(team2)
-                .date(new Date())
+                .date(LocalDate.now())
                 .goals1((byte) score1)
                 .goals2((byte) score2)
                 .build();
