@@ -1,6 +1,5 @@
 package ro.micsa.domain;
 
-import com.google.common.base.MoreObjects;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 
@@ -10,6 +9,7 @@ import javax.validation.Validation;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 public class Score {
@@ -63,15 +63,34 @@ public class Score {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Score score = (Score) o;
+        return goals1 == score.goals1 &&
+                goals2 == score.goals2 &&
+                Objects.equals(id, score.id) &&
+                Objects.equals(team1, score.team1) &&
+                Objects.equals(team2, score.team2) &&
+                Objects.equals(date, score.date);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, team1, team2, date, goals1, goals2);
+    }
+
+    @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("team1", team1)
-                .add("team2", team2)
-                .add("date", date)
-                .add("goals1", goals1)
-                .add("goals2", goals2)
-                .toString();
+        return "Score{" +
+                "id='" + id + '\'' +
+                ", team1='" + team1 + '\'' +
+                ", team2='" + team2 + '\'' +
+                ", date=" + date +
+                ", goals1=" + goals1 +
+                ", goals2=" + goals2 +
+                '}';
     }
 
     public static class Builder {
