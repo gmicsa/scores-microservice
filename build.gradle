@@ -43,9 +43,10 @@ springBoot  {
 
 dependencies {
     compile('javax.xml.bind:jaxb-api:2.3.0')
+    compile('javax.el:javax.el-api:3.0.0')
+    compile('org.glassfish:javax.el:3.0.0')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-    compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-webflux')
     runtime('org.springframework.boot:spring-boot-devtools')
     compileOnly('org.projectlombok:lombok:1.16.20')

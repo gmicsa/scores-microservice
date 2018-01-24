@@ -5,33 +5,38 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 import ro.micsa.domain.Score;
-import ro.micsa.repository.ScoresRepository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpMethod.GET;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ScoresResourceIntegrationTest {
 
-    public static final String SCORES_BASE_URL = "http://localhost:8080/scores";
-    @Autowired
-    private ScoresRepository scoresRepository;
+    private static final String SCORES_BASE_URL = "http://localhost:8080/scores";
 
-    private TestRestTemplate restTemplate = new TestRestTemplate();
+    private static WebClient webClient = WebClient.create(SCORES_BASE_URL);
+
+    @Autowired
+    private ReactiveMongoOperations reactiveMongoOperations;
+
 
     @Before
     public void deleteAllScores() {
-        scoresRepository.deleteAll();
+        Mono<Void> dropResult = reactiveMongoOperations.dropCollection(Score.class);
+        StepVerifier.create(dropResult).verifyComplete();
     }
 
     @Test
@@ -40,13 +45,19 @@ public class ScoresResourceIntegrationTest {
 
         Score scoreDinamoForesta = buildScore("Dinamo", "Foresta", 4, 5);
 
-        scoresRepository.saveAll(List.of(scoreBarcaSteaua, scoreDinamoForesta)).blockLast();
+        Flux<Score> insertedScores = reactiveMongoOperations.insertAll(List.of(scoreBarcaSteaua, scoreDinamoForesta));
+        StepVerifier.create(insertedScores).expectNextCount(2).verifyComplete();
 
-        ResponseEntity<List<Score>> response = restTemplate
-                .exchange(SCORES_BASE_URL + "?team=Steaua", GET, null, new ParameterizedTypeReference<List<Score>>(){});
+        ClientResponse response = webClient
+                .get()
+                .uri(builder -> builder.queryParam("team", "Steaua").build())
+                .exchange()
+                .block();
+        List<Score> scores = response.bodyToMono(new ParameterizedTypeReference<List<Score>>(){}).block();
 
-        assertThat(response.getStatusCode().value()).isEqualTo(200);
-        assertThat(response.getBody()).containsOnly(scoreBarcaSteaua);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(scores).containsOnly(scoreBarcaSteaua);
     }
 
     private Score buildScore(String team1, String team2, int score1, int score2) {
