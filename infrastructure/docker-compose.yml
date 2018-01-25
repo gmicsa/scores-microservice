@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   scores-microservice:
@@ -7,6 +7,8 @@ services:
     container_name: scores-microservice1
     ports:
      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
     links:
      - mongodb
     restart: always

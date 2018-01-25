@@ -45,6 +45,7 @@ dependencies {
     compile('javax.xml.bind:jaxb-api:2.3.0')
     compile('javax.el:javax.el-api:3.0.0')
     compile('org.glassfish:javax.el:3.0.0')
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.6')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     compile('org.springframework.boot:spring-boot-starter-webflux')
@@ -57,9 +58,9 @@ dependencies {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-    push = true
+    // push = true
     applicationName = jar.baseName
-    dockerfile = file('infrastructure/Dockerfile')
+    dockerfile = file('Dockerfile')
     doFirst {
         copy {
             from jar
