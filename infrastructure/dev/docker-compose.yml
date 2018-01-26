@@ -4,17 +4,19 @@ services:
   scores-microservice:
     build: ..
     image: gmicsa/scores-microservice:0.0.1
-    container_name: scores-microservice1
     ports:
      - "8080:8080"
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
     links:
      - mongodb
+    depends_on:
+    - mongodb
     restart: always
   mongodb:
-    image: mongo:3.0.2
-    container_name: mongodb
+    image: mongo:3.7.1
+    volumes: 
+     - /data/db:/data/db
     ports:
      - "27017:27017"
     restart: always
