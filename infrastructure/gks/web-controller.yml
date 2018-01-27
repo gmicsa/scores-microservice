@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: web
+  name: web-controller
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: web
+    spec:
+      containers:
+      - image: gcr.io/scores-microservice/scores-microservice:0.0.1
+        imagePullPolicy: Always
+        name: web
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: gks
+        ports:
+        - containerPort: 8080
+          name: http-server

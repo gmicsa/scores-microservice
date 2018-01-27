@@ -1,4 +1,11 @@
 spring:
+  data:
+    mongodb:
+      database: scores
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+management:
+  endpoints:
+    web:
+      expose: ["*"]
