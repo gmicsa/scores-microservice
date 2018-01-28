@@ -5,7 +5,7 @@ metadata:
     name: web
   name: web-controller
 spec:
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
