@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ro.micsa.domain.Score;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ScoresResourceIntegrationTest {
     }
 
     @Test
-    public void given2ScoresPersisted_whenFilteringScoresByOneTeam_thenRightScoreIsReturned() {
+    public void given2ScoresPersisted_whenFindScoresByOneTeam_thenRightScoreIsReturned() {
         Score scoreBarcaSteaua = buildScore("Barcelona", "Steaua", 3, 2);
 
         Score scoreDinamoForesta = buildScore("Dinamo", "Foresta", 4, 5);
@@ -58,6 +59,84 @@ public class ScoresResourceIntegrationTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
         assertThat(scores).containsOnly(scoreBarcaSteaua);
+    }
+
+    @Test
+    public void saveScore() {
+        Score scoreToBeCreated = buildScore("Team1", "Team2", 1, 0);
+
+        ClientResponse response = webClient
+                .post()
+                .body(Mono.just(scoreToBeCreated), Score.class)
+                .exchange()
+                .block();
+
+        Score createdScore = response.bodyToMono(Score.class).block();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(createdScore.getId()).isNotNull();
+        assertThat(createdScore).isEqualToIgnoringGivenFields(scoreToBeCreated, "id");
+    }
+
+    @Test
+    public void updateScore() {
+        Score scoreToSaveInDb = buildScore("Barcelona", "Steaua", 3, 2);
+        Score scoreFromDb = reactiveMongoOperations.insert(scoreToSaveInDb).block();
+
+        Score updatedScore = Score
+                .builder()
+                .id(scoreFromDb.getId())
+                .team1(scoreFromDb.getTeam1())
+                .team2(scoreFromDb.getTeam2())
+                .goals1(scoreFromDb.getGoals1())
+                .goals2((byte) 0)
+                .date(scoreFromDb.getDate())
+                .build();
+
+        ClientResponse response = webClient
+                .put()
+                .uri(URI.create(SCORES_BASE_URL + "/" + scoreFromDb.getId()))
+                .body(Mono.just(updatedScore), Score.class)
+                .exchange()
+                .block();
+        Score updatedScoreResponse = response.bodyToMono(Score.class).block();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(updatedScoreResponse).isEqualTo(updatedScore);
+    }
+
+    @Test
+    public void findById() {
+        Score scoreToSaveInDb = buildScore("Barcelona", "Steaua", 3, 2);
+        Score scoreFromDb = reactiveMongoOperations.insert(scoreToSaveInDb).block();
+
+        ClientResponse response = webClient
+                .get()
+                .uri(URI.create(SCORES_BASE_URL + "/" + scoreFromDb.getId()))
+                .exchange()
+                .block();
+
+        Score scoreResponse = response.bodyToMono(Score.class).block();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(scoreResponse).isEqualTo(scoreFromDb);
+    }
+
+    @Test
+    public void givenOneScoreInDb_whenDeletingScore_noScoreRemainsInDb() {
+        Score scoreToSaveInDb = buildScore("Barcelona", "Steaua", 3, 2);
+        Score scoreFromDb = reactiveMongoOperations.insert(scoreToSaveInDb).block();
+
+        ClientResponse response = webClient
+                .delete()
+                .uri(URI.create(SCORES_BASE_URL + "/" + scoreFromDb.getId()))
+                .exchange()
+                .block();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
+
+        Flux<Score> allScores = reactiveMongoOperations.findAll(Score.class);
+        StepVerifier.create(allScores).expectComplete();
     }
 
     private Score buildScore(String team1, String team2, int score1, int score2) {

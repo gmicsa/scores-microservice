@@ -12,7 +12,7 @@ spec:
         name: web
     spec:
       containers:
-      - image: gcr.io/scores-microservice/scores-microservice:0.0.1
+      - image: gcr.io/scores-microservice/scores-microservice:0.0.2
         imagePullPolicy: Always
         name: web
         env:

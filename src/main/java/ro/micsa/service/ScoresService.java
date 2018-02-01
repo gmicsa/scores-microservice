@@ -13,15 +13,23 @@ public class ScoresService {
     @Autowired
     private ScoresRepository scoresRepository;
 
-    public Flux<Score> getScores() {
+    public Flux<Score> findAll() {
         return scoresRepository.findAll();
     }
 
-    public Flux<Score> getScoresForTeam(String team) {
+    public Flux<Score> findByTeam(String team) {
         return scoresRepository.findByTeam1OrTeam2(team, team);
     }
 
-    public synchronized Mono<Score> addScore(Score score) {
+    public Mono<Score> findById(String id) {
+        return scoresRepository.findById(id);
+    }
+
+    public Mono<Score> saveScore(Score score) {
         return scoresRepository.save(score);
+    }
+
+    public Mono<Void> deleteScore(String id) {
+        return scoresRepository.deleteById(id);
     }
 }
