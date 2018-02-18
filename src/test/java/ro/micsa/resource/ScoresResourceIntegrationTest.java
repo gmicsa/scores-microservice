@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ScoresResourceIntegrationTest {
 
-    private static final String SCORES_BASE_URL = "http://localhost:8080/scores";
+    private static final String SCORES_BASE_URL = "http://localhost:8080/api/scores";
 
     private static WebClient webClient = WebClient.create(SCORES_BASE_URL);
 

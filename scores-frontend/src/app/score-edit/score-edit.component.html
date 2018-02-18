@@ -1,0 +1,38 @@
+<div class="container">
+  <h3 *ngIf="mode === 'edit'">
+    Edit score having ID: {{score.id}}
+  </h3>
+
+  <h3 *ngIf="mode === 'new'">
+    Create a new score
+  </h3>
+  <form (ngSubmit)="onSubmit()" #scoreForm="ngForm">
+    <div>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="date" required [(ngModel)]="score.date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Home team" name="team1" required [(ngModel)]="score.team1">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="number" placeholder="Home team score" name="goals1" required [(ngModel)]="score.goals1">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Away team" name="team2" required [(ngModel)]="score.team2">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput matInput type="number" placeholder="Away team score" name="goals2" required [(ngModel)]="score.goals2">
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" type="submit" [disabled]='!scoreForm.valid'>Save</button>
+      <button mat-raised-button (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping("/scores")
+@RequestMapping("/api/scores")
 @Slf4j
 public class ScoresResource {
 

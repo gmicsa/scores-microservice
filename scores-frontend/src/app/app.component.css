@@ -1,0 +1,12 @@
+body {
+  font-family: sans-serif;
+  font-size: .9rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+.toolbarTitle {
+  cursor: pointer;
+}

@@ -1,0 +1,56 @@
+  .button-row {
+      margin: 20px;
+  }
+
+  /* 1 column: 320px */
+
+  .autowide {
+      margin: 0 auto;
+      width: 98%;
+  }
+
+  .autowide img {
+      float: left;
+      margin: 0 .75rem 0 0;
+  }
+
+  /* 2 columns: 600px */
+
+  @media only screen and (min-width: 600px) {
+      .autowide ::ng-deep .module {
+          float: left;
+          margin-right: 2.564102564102564%;
+          width: 46.717948717948715%;
+      }
+      .autowide ::ng-deep .module:nth-child(2n+0) {
+          margin-right: 0;
+      }
+  }
+
+  /* 3 columns: 768px */
+
+  @media only screen and (min-width: 768px) {
+      .autowide ::ng-deep .module {
+          width: 30.623931623931625%;
+      }
+      .autowide ::ng-deep .module:nth-child(2n+0) {
+          margin-right: 2.564102564102564%;
+      }
+      .autowide ::ng-deep .module:nth-child(3n+0) {
+          margin-right: 0;
+      }
+  }
+
+  /* 4 columns: 992px and up */
+
+  @media only screen and (min-width: 992px) {
+      .autowide ::ng-deep .module {
+          width: 22.076923076923077%;
+      }
+      .autowide ::ng-deep .module:nth-child(3n+0) {
+          margin-right: 2.564102564102564%;
+      }
+      .autowide ::ng-deep .module:nth-child(4n+0) {
+          margin-right: 0;
+      }
+  }

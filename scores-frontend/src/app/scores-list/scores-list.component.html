@@ -1,0 +1,8 @@
+<div class="button-row">
+  <button mat-raised-button color="primary" (click)="addScore()">Add score</button>
+  <button mat-raised-button color="default" (click)="refresh()">Refresh scores</button>
+</div>
+
+<div class="autowide">
+  <app-score-panel *ngFor="let score of scores" [score]=score></app-score-panel>
+</div>

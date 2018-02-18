@@ -1,0 +1,45 @@
+  .module {
+    background-color: lightgreen;
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+    min-height: 285px;
+  }
+
+  .module p {
+    padding: .25rem .75rem;
+  }
+
+  .winner {
+    font-weight: bold;
+  }
+
+  .goal {
+    background: url(/assets/img/Soccer_32x32.png) no-repeat;
+    height: 32px;
+    width: 32px;
+    display: inline-block;
+  }
+
+  .goalHolder {
+    padding-left: 20px;
+  }
+
+  .buttonHolder {
+    margin-top: 10px;
+  }
+
+  .noGoals {
+    vertical-align: -webkit-baseline-middle;
+    font-size: 20px;
+    color: red;
+  }
+
+  .zeroGoals {
+    height: 32px;
+  }
+
+  .date {
+    font-weight: bold;
+    font-size: 20px;
+    background-color: lightgrey;
+  }

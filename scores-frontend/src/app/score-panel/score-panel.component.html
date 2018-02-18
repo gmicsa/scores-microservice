@@ -1,0 +1,25 @@
+<div class="module" [id]="'score-panel-' + score.id">
+  <p class="date">{{score.date | date:'dd/MM/yyyy'}}</p>
+  <p class="team" [ngClass]="{'winner': score.goals1>score.goals2}">{{score.team1}}</p>
+  <div class="goalHolder">
+    <span class="noGoals" *ngIf="score.goals1>=6">{{score.goals1}}x</span>
+    <div class="goal" *ngFor="let goal of counter(score.goals1<6 ? score.goals1 : 1)">&nbsp;</div>
+    <div class="zeroGoals" *ngIf="!score.goals1"> - </div>
+  </div>
+
+  <p class="team" [ngClass]="{'winner': score.goals1<score.goals2}">{{score.team2}}</p>
+  <div class="goalHolder">
+    <span class="noGoals" *ngIf="score.goals2>=6">{{score.goals2}}x</span>
+    <div class="goal" *ngFor="let goal of counter(score.goals2<6 ? score.goals2 : 1)">&nbsp;</div>
+    <div class="zeroGoals" *ngIf="!score.goals2"> - </div>
+  </div>
+
+  <div class="buttonHolder">
+    <button mat-icon-button>
+      <mat-icon matTooltip="Edit score" (click)="editScore(score)">edit</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="removeScore(score)">
+      <mat-icon matTooltip="Remove score">delete_forever</mat-icon>
+    </button>
+  </div>
+</div>

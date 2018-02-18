@@ -23,8 +23,8 @@ public class ScoresSecurityConfiguration {
                 */
                 .csrf().disable()
                 .authorizeExchange()
-                .pathMatchers("/scores/**").permitAll()
                 .pathMatchers("/actuator/**").hasRole("ADMIN")
+                .pathMatchers("/**").permitAll()
                 .anyExchange().authenticated()
                 .and().httpBasic().and().build();
     }
