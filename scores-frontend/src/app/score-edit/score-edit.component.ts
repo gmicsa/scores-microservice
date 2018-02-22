@@ -10,11 +10,11 @@ import { ScoresService } from '../scores-list/scores.service';
   styleUrls: ['./score-edit.component.css'],
 })
 export class ScoreEditComponent implements OnInit {
-  private mode: string = 'new';
+  public mode: string = 'new';
+  public score: Score;
   private scoreId: number;
-  private score: Score;
 
-  constructor(private activatedRoute : ActivatedRoute, 
+  constructor(private activatedRoute : ActivatedRoute,
     private router: Router,
     private scoresService: ScoresService) { }
 

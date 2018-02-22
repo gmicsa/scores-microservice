@@ -13,7 +13,7 @@ cd ..
 
 echo 'Copy Angular resources'
 mkdir -p build/resources/main/static
-cp scores-frontend/dist/* build/resources/main/static
+cp -r scores-frontend/dist/* build/resources/main/static
 
 echo 'Building Spring Boot app'
 ./gradlew build buildDocker

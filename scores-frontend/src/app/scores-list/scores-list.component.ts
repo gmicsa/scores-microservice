@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import {ScoresService} from "./scores.service";
 import { Score } from '../score.model';
@@ -10,9 +11,9 @@ import { Score } from '../score.model';
   templateUrl: './scores-list.component.html',
   styleUrls: ['./scores-list.component.css']
 })
-export class ScoresListComponent implements OnInit {
-
+export class ScoresListComponent implements OnInit, OnDestroy {
   public scores: Score[];
+  private subscription: Subscription;
 
   constructor(private router: Router, private scoresService : ScoresService) {
 
@@ -20,11 +21,15 @@ export class ScoresListComponent implements OnInit {
 
   ngOnInit() {
     this.refresh();
-    this.scoresService.scoresUpdated.subscribe(
+    this.subscription = this.scoresService.scoresUpdated.subscribe(
       (scores : Score[]) => {
         this.scores = scores;
       }
-    )
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   refresh() {

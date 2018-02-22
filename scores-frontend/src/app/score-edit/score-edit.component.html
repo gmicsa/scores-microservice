@@ -19,7 +19,8 @@
         <input matInput placeholder="Home team" name="team1" required [(ngModel)]="score.team1">
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="number" placeholder="Home team score" name="goals1" required [(ngModel)]="score.goals1">
+        <input matInput type="number" placeholder="Home team score" 
+          name="goals1" required [(ngModel)]="score.goals1" pattern="[0-9]+">
       </mat-form-field>
     </div>
     <div>
@@ -27,7 +28,8 @@
         <input matInput placeholder="Away team" name="team2" required [(ngModel)]="score.team2">
       </mat-form-field>
       <mat-form-field>
-        <input matInput matInput type="number" placeholder="Away team score" name="goals2" required [(ngModel)]="score.goals2">
+        <input matInput matInput type="number" placeholder="Away team score" 
+          name="goals2" required [(ngModel)]="score.goals2"  pattern="[0-9]+">
       </mat-form-field>
     </div>
     <div>

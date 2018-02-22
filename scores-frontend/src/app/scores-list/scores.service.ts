@@ -23,7 +23,7 @@ export class ScoresService {
   }
 
   saveScore(score: Score) {
-    if(!score.id){
+    if(score.id === null){
       score.id = this.id++;
       this.scores.push(score);
     }else{

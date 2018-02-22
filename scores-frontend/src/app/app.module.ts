@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from "@angular/router";
 
-import { MatButtonModule, MatCardModule, MatInputModule, MatDatepickerModule, 
+import { MatButtonModule, MatCardModule, MatInputModule, MatDatepickerModule,
   MatTooltipModule, MatToolbarModule, MatIconModule, MatNativeDateModule } from '@angular/material';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +16,9 @@ import { ScoresService } from "./scores-list/scores.service";
 import { ScoreEditComponent } from './score-edit/score-edit.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
+/**
+ * Please update AngularRouteWebFilter Spring web filter when you add new ng routes so that they are not handled by Spring.
+ */
 const appRoutes: Routes = [
   { path: 'scores', component: ScoresListComponent },
   { path: 'scores/:id', component: ScoreEditComponent },
