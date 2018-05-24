@@ -1,4 +1,4 @@
-package ro.micsa.config;
+package ro.micsa.scores.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

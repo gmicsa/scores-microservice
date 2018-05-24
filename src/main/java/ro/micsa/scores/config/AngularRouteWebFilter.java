@@ -1,4 +1,4 @@
-package ro.micsa.config;
+package ro.micsa.scores.config;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;

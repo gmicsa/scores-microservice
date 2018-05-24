@@ -1,4 +1,4 @@
-package ro.micsa.resource;
+package ro.micsa.scores.resource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import ro.micsa.domain.Score;
+import ro.micsa.scores.domain.Score;
 
 import java.net.URI;
 import java.time.LocalDate;

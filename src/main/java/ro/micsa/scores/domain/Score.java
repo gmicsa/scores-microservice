@@ -1,4 +1,4 @@
-package ro.micsa.domain;
+package ro.micsa.scores.domain;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

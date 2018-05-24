@@ -1,4 +1,4 @@
-package ro.micsa.domain;
+package ro.micsa.scores.domain;
 
 import org.hamcrest.CustomMatcher;
 import org.junit.Rule;
@@ -8,7 +8,6 @@ import org.junit.rules.ExpectedException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
-import java.util.Date;
 
 //TODO upgrade to JUnit5 late 2016
 public class ScoreTest {

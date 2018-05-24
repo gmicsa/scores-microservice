@@ -1,4 +1,4 @@
-package ro.micsa.resource;
+package ro.micsa.scores.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ro.micsa.domain.Score;
-import ro.micsa.service.ScoresService;
+import ro.micsa.scores.domain.Score;
+import ro.micsa.scores.service.ScoresService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

@@ -1,11 +1,11 @@
-package ro.micsa.service;
+package ro.micsa.scores.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ro.micsa.domain.Score;
-import ro.micsa.repository.ScoresRepository;
+import ro.micsa.scores.domain.Score;
+import ro.micsa.scores.repository.ScoresRepository;
 
 @Service
 public class ScoresService {
