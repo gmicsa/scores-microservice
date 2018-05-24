@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from "@angular/router";
+import { HttpClientModule } from "@angular/common/http";
 
 import { MatButtonModule, MatCardModule, MatInputModule, MatDatepickerModule,
   MatTooltipModule, MatToolbarModule, MatIconModule, MatNativeDateModule } from '@angular/material';
@@ -40,6 +41,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MatButtonModule,
     MatCardModule,
     MatInputModule,

@@ -1,11 +1,10 @@
 package ro.micsa.scores.resource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ro.micsa.scores.domain.Score;
@@ -34,7 +33,9 @@ public class ScoresResource {
     public Mono<Score> findById(@PathVariable @NotNull String scoreId) {
         log.info("Find score by id " + scoreId);
 
-        return scoresService.findById(scoreId);
+        return scoresService
+                .findById(scoreId)
+                .switchIfEmpty(Mono.error(new RuntimeException("Score with id " + scoreId + " not found")));
     }
 
     @PostMapping

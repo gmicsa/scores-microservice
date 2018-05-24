@@ -12,30 +12,49 @@ import { ScoresService } from '../scores-list/scores.service';
 export class ScoreEditComponent implements OnInit {
   public mode: string = 'new';
   public score: Score;
-  private scoreId: number;
+  private scoreId: string;
 
   constructor(private activatedRoute : ActivatedRoute,
     private router: Router,
     private scoresService: ScoresService) { }
 
   ngOnInit() {
+    this.score = new Score(null, '', 0, '', 0, new Date());
+
     this.activatedRoute.params.subscribe(
       (params : Params) => {
         if('new' === params['id']){
           this.mode = 'new';
-          this.score = new Score(null, '', 0, '', 0, new Date());
         } else {
           this.mode = "edit";
-          this.scoreId = +params['id'];
-          this.score =  JSON.parse(JSON.stringify(this.scoresService.getScoreById(this.scoreId)));;
+          this.scoreId = params['id'];
+
+          this.scoresService.getScoreById(this.scoreId).subscribe(
+            (score: Score) => {
+              this.score = score;
+              },
+            (error: any) => {
+              console.log('Not able to load score with ID: ' + this.scoreId + '\n' + JSON.stringify(error));
+              alert('Not able to load score!');
+            });
         }
       }
     )
   }
 
   onSubmit(){
-    this.scoresService.saveScore(this.score);
-    this.router.navigate(['/scores']);
+    this.score.date.setMinutes(-this.score.date.getTimezoneOffset());// add GMT offset so that during serialization previous day is not sent to backend
+
+    this.scoresService.saveScore(this.score).subscribe(
+      (score: Score) => {
+        console.log('Score saved ' + JSON.stringify(score));
+        this.router.navigate(['/scores']);
+      },
+      (error: any) => {
+        console.log('Not able to save score: ' + JSON.stringify(error));
+        alert('Not able to save score!');
+      }
+    );
   }
 
   onCancel(){

@@ -1,57 +1,56 @@
 import {Score} from "../score.model";
+import 'rxjs/Rx';
+import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
 
+@Injectable()
 export class ScoresService {
-  private id : number = 0;
+  public scoresRemoved : Subject<Score> = new Subject();
 
-  private scores: Score[] = [
-    new Score(this.id++,'FCSB', 3, 'Dinamo', 1, new Date(2018, 1, 7)),
-    new Score(this.id++,'Real Madrid', 2, 'Barcelona', 4, new Date(2015, 0, 2)),
-    new Score(this.id++,'FC Arges', 0, 'Steaua', 0, new Date(2003, 9, 23)),
-    new Score(this.id++,'FC Snagov', 0, 'FCSB', 5, new Date(2017, 7, 12)),
-    new Score(this.id++,'FCSB', 7, 'Fulgerul Bragadiru', 1, new Date(2017, 7, 17))
-  ];
+  constructor(private httpClient: HttpClient) {}
 
-  public scoresUpdated : Subject<Score[]> = new Subject();
-
-  constructor() {
-
+  getScores() : Observable<Score[]> {
+    return this.httpClient.get<Score[]>(this.getScoresApiBaseURL())
+      .map((scores: Score[]) => {
+        scores.forEach((score: Score) => {
+          score.date = new Date(score.date); //map string to date
+        });
+        return scores;
+      });
   }
 
-  getScores() : Score[] {
-    return this.scores.slice();
-  }
+  saveScore(score: Score): Observable<Score> {
+    console.log('Save ' + JSON.stringify(score));
 
-  saveScore(score: Score) {
     if(score.id === null){
-      score.id = this.id++;
-      this.scores.push(score);
+      return this.httpClient.post<Score>(this.getScoresApiBaseURL(), score);
     }else{
-      let oldScore : Score = this.scores.filter((s) => s.id === score.id)[0];
-      if(oldScore){
-        oldScore.date = score.date;
-        oldScore.team1 = score.team1;
-        oldScore.goals1 = score.goals1;
-        oldScore.team2 = score.team2;
-        oldScore.goals2 = score.goals2;
-      }
+      return this.httpClient.put<Score>(this.getScoresApiBaseURL() + score.id, score);
     }
-    console.log('Save score ' + JSON.stringify(score));
-
-    this.scoresUpdated.next(this.getScores());
   }
 
   removeScore(score: Score) {
     console.log('Remove ' + JSON.stringify(score));
-    let index = this.scores.indexOf(score, 0);
-    if (index > -1) {
-      this.scores.splice(index, 1);
-    }
 
-    this.scoresUpdated.next(this.getScores());
+    return this.httpClient.delete(this.getScoresApiBaseURL() + score.id).subscribe(
+      () => this.scoresRemoved.next(score),
+      () => alert('Not able to remove score!')
+    );
   }
 
-  getScoreById(scoreId: number) : Score {
-    return this.scores.find((score) => score.id === scoreId);
+  getScoreById(scoreId: string) : Observable<Score> {
+    console.log('Get score with id ' + scoreId);
+
+    return this.httpClient.get<Score>(this.getScoresApiBaseURL() + scoreId)
+      .map((score: Score) => {
+        score.date = new Date(score.date);  //map string to date
+        return score;
+    });
+  }
+
+  private getScoresApiBaseURL() {
+    return 'http://' + location.host + '/api/scores/';
   }
 }

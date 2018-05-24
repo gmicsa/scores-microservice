@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http/src/response';
 import { Subscription } from 'rxjs/Subscription';
 
 import {ScoresService} from "./scores.service";
 import { Score } from '../score.model';
-
 
 @Component({
   selector: 'app-scores-list',
@@ -21,9 +21,11 @@ export class ScoresListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.refresh();
-    this.subscription = this.scoresService.scoresUpdated.subscribe(
-      (scores : Score[]) => {
-        this.scores = scores;
+    this.subscription = this.scoresService.scoresRemoved.subscribe(
+      (score: Score) => {
+        console.log('Score removed ' + score.id);
+
+        this.refresh();
       }
     );
   }
@@ -33,8 +35,16 @@ export class ScoresListComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-    console.log('Refreshing');
-    this.scores = this.scoresService.getScores();
+    console.log('Get scores');
+    this.scoresService.getScores().subscribe(
+      (scores: Score[]) => {
+        this.scores = scores;
+      },
+      (error: HttpErrorResponse) => {
+        console.log('Error loading scores: ' + JSON.stringify(error));
+        alert('Error loading scores. Please try again later.');
+      }
+    );
   }
 
   addScore() {

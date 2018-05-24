@@ -2,6 +2,7 @@ spring:
   data:
     mongodb:
       database: scores
+      host: localhost
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
