@@ -24,8 +24,8 @@ apply plugin: "com.gorylenko.gradle-git-properties"
 
 group = 'gmicsa'
 version = '0.0.2'
-sourceCompatibility = 9
-targetCompatibility = 9
+sourceCompatibility = 10
+targetCompatibility = 10
 
 jar {
     baseName = 'scores-microservice'
@@ -51,7 +51,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     compile('org.springframework.boot:spring-boot-starter-webflux')
     runtime('org.springframework.boot:spring-boot-devtools')
-    compileOnly('org.projectlombok:lombok:1.16.20')
+//    compileOnly('org.projectlombok:lombok:1.16.21')
+    compile files('libs/lombok-1.16.21.jar')  //TODO please remove this as soon as latest Lombok jar in on Maven central
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('io.projectreactor:reactor-test')
