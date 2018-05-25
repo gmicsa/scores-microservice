@@ -15,12 +15,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ro.micsa.scores.domain.Score;
+import ro.micsa.scores.domain.ScoreTestBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ro.micsa.scores.domain.ScoreTestBuilder.buildScore;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -137,15 +139,5 @@ public class ScoresResourceIntegrationTest {
 
         Flux<Score> allScores = reactiveMongoOperations.findAll(Score.class);
         StepVerifier.create(allScores).expectComplete();
-    }
-
-    private Score buildScore(String team1, String team2, int score1, int score2) {
-        return Score.builder()
-                .team1(team1)
-                .team2(team2)
-                .date(LocalDate.now())
-                .goals1((byte) score1)
-                .goals2((byte) score2)
-                .build();
     }
 }

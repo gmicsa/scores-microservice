@@ -5,7 +5,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 
 import { MatButtonModule, MatCardModule, MatInputModule, MatDatepickerModule,
-  MatTooltipModule, MatToolbarModule, MatIconModule, MatNativeDateModule } from '@angular/material';
+  MatTooltipModule, MatToolbarModule, MatIconModule, MatNativeDateModule, MatButtonToggleModule } from '@angular/material';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -49,7 +49,8 @@ const appRoutes: Routes = [
     MatNativeDateModule,
     MatTooltipModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonToggleModule
   ],
   providers: [
     ScoresService,

@@ -1,6 +1,34 @@
 <div class="button-row">
-  <button mat-raised-button color="primary" (click)="addScore()">Add score</button>
-  <button mat-raised-button color="default" (click)="refresh()">Refresh scores</button>
+  <button mat-raised-button color="primary" (click)="addScore()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-button-toggle (click)="toggleSearchPanel()">
+    <mat-icon>search</mat-icon>
+    <mat-icon *ngIf="!showSearchPanel">expand_more</mat-icon>
+    <mat-icon *ngIf="showSearchPanel">expand_less</mat-icon>
+  </mat-button-toggle>
+</div>
+
+<div class="button-row" [hidden]="!showSearchPanel">
+  <form>
+    <mat-form-field>
+      <input matInput placeholder="Team" name="team" [(ngModel)]="filter.team">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="pickerFrom" placeholder="From" name="from" [(ngModel)]="filter.from">
+      <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+      <mat-datepicker #pickerFrom></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="pickerUntil" placeholder="Until" name="until" [(ngModel)]="filter.until">
+      <mat-datepicker-toggle matSuffix [for]="pickerUntil"></mat-datepicker-toggle>
+      <mat-datepicker #pickerUntil></mat-datepicker>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="refresh()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </form>
 </div>
 
 <div class="autowide">

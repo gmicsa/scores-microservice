@@ -1,9 +1,10 @@
-import {Score} from "../score.model";
+import {Score, ScoreFilter} from "../score.model";
 import 'rxjs/Rx';
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {DatePipe} from "@angular/common";
 
 @Injectable()
 export class ScoresService {
@@ -11,14 +12,31 @@ export class ScoresService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getScores() : Observable<Score[]> {
-    return this.httpClient.get<Score[]>(this.getScoresApiBaseURL())
+  getScores(filter: ScoreFilter) : Observable<Score[]> {
+    let params = new HttpParams();
+
+    if(filter.team){
+      params = params.append('team', filter.team);
+    }
+    if(filter.from) {
+      params = params.append('from', this.formatDate(filter.from));
+    }
+    if(filter.until) {
+      params = params.append('until', this.formatDate(filter.until));
+    }
+
+    return this.httpClient.get<Score[]>(this.getScoresApiBaseURL(), {params: params})
       .map((scores: Score[]) => {
         scores.forEach((score: Score) => {
           score.date = new Date(score.date); //map string to date
         });
         return scores;
       });
+  }
+
+  private formatDate(date: Date): string {
+    let pipe = new DatePipe('en-GB');
+    return pipe.transform(date, 'yyyy-MM-dd');
   }
 
   saveScore(score: Score): Observable<Score> {

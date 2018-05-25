@@ -3,15 +3,17 @@ package ro.micsa.scores.resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ro.micsa.scores.domain.Score;
+import ro.micsa.scores.repository.ScoresFilter;
 import ro.micsa.scores.service.ScoresService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/scores")
@@ -23,10 +25,17 @@ public class ScoresResource {
 
     @GetMapping
     @ResponseBody
-    public Flux<Score> find(@RequestParam(required = false) String team) {
-        log.info("Find scores" + (team != null ? " for team " + team : ""));
+    public Flux<Score> find(@RequestParam(required = false) String team,
+                            @RequestParam(required = false) String from,
+                            @RequestParam(required = false) String until) {
+        ScoresFilter filter = new ScoresFilter();
+        filter.setTeam(Optional.ofNullable(team));
+        filter.setFrom(Optional.ofNullable(from).flatMap(date -> Optional.of(LocalDate.parse(from))));
+        filter.setUntil(Optional.ofNullable(until).flatMap(date -> Optional.of(LocalDate.parse(until))));
 
-        return StringUtils.isEmpty(team) ? scoresService.findAll() : scoresService.findByTeam(team);
+        log.info("Find scores for filter " + filter);
+
+        return scoresService.find(filter);
     }
 
     @GetMapping("/{scoreId}")

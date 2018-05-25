@@ -6,3 +6,9 @@ export class Score {
                 public goals2: number,
                 public date: Date) {}
 }
+
+export class ScoreFilter {
+    constructor(public team: string,
+                public from: Date,
+                public until: Date) {}
+}

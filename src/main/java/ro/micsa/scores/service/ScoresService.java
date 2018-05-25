@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ro.micsa.scores.domain.Score;
+import ro.micsa.scores.repository.ScoresFilter;
 import ro.micsa.scores.repository.ScoresRepository;
 
 @Service
@@ -13,12 +14,8 @@ public class ScoresService {
     @Autowired
     private ScoresRepository scoresRepository;
 
-    public Flux<Score> findAll() {
-        return scoresRepository.findAll();
-    }
-
-    public Flux<Score> findByTeam(String team) {
-        return scoresRepository.findByTeam1OrTeam2(team, team);
+    public Flux<Score> find(ScoresFilter filter) {
+        return scoresRepository.find(filter);
     }
 
     public Mono<Score> findById(String id) {

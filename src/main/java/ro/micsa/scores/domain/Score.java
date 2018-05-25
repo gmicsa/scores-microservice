@@ -3,6 +3,7 @@ package ro.micsa.scores.domain;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.ConstraintViolation;
@@ -27,12 +28,15 @@ public class Score {
     @Id
     String id;
 
+    @Indexed
     @NotEmpty(message = "ro.micsa.scores.validation.empty_team1")
     String team1;
 
+    @Indexed
     @NotEmpty(message = "ro.micsa.scores.validation.empty_team2")
     String team2;
 
+    @Indexed
     @NotNull(message = "ro.micsa.scores.validation.empty_date")
     LocalDate date;
 
