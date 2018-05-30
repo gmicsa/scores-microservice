@@ -1,7 +1,7 @@
+
+import {map} from 'rxjs/operators';
 import {Score, ScoreFilter} from "../score.model";
-import 'rxjs/Rx';
-import {Observable} from "rxjs/Observable";
-import {Subject} from "rxjs/Subject";
+import {Observable, Subject} from "rxjs";
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {DatePipe} from "@angular/common";
@@ -25,13 +25,13 @@ export class ScoresService {
       params = params.append('until', this.formatDate(filter.until));
     }
 
-    return this.httpClient.get<Score[]>(this.getScoresApiBaseURL(), {params: params})
-      .map((scores: Score[]) => {
+    return this.httpClient.get<Score[]>(this.getScoresApiBaseURL(), {params: params}).pipe(
+      map((scores: Score[]) => {
         scores.forEach((score: Score) => {
           score.date = new Date(score.date); //map string to date
         });
         return scores;
-      });
+      }));
   }
 
   private formatDate(date: Date): string {
@@ -61,11 +61,11 @@ export class ScoresService {
   getScoreById(scoreId: string) : Observable<Score> {
     console.log('Get score with id ' + scoreId);
 
-    return this.httpClient.get<Score>(this.getScoresApiBaseURL() + scoreId)
-      .map((score: Score) => {
+    return this.httpClient.get<Score>(this.getScoresApiBaseURL() + scoreId).pipe(
+      map((score: Score) => {
         score.date = new Date(score.date);  //map string to date
         return score;
-    });
+    }));
   }
 
   private getScoresApiBaseURL() {
