@@ -1,6 +1,10 @@
 package ro.micsa.scores.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -23,6 +27,7 @@ import static lombok.AccessLevel.PRIVATE;
 @ToString
 @FieldDefaults(level= PRIVATE)
 @NoArgsConstructor(access = PRIVATE)
+// TODO Use Java records
 public class Score {
 
     @Id

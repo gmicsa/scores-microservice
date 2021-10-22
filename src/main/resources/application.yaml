@@ -9,4 +9,8 @@ spring:
 management:
   endpoints:
     web:
-      expose: ["*"]
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

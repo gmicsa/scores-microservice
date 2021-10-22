@@ -1,44 +1,34 @@
 package ro.micsa.scores.domain;
 
-import org.hamcrest.CustomMatcher;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 
-//TODO upgrade to JUnit5 late 2016
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class ScoreTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void emptyFields() {
-        Score.builder().build();
+        assertThrows(ConstraintViolationException.class, () -> Score.builder().build());
     }
 
     @Test
     public void negativeScore() {
-        expectedException.expect(ConstraintViolationException.class);
-        expectedException.expect(new CustomMatcher<ConstraintViolationException>("negative_goals2") {
-            @Override
-            public boolean matches(Object item) {
-                ConstraintViolation<?> firstConstraintViolation = ((ConstraintViolationException) item).getConstraintViolations().stream().findFirst().get();
-                return firstConstraintViolation.getMessage().equals("ro.micsa.scores.validation.negative_goals2");
-            }
-        });
+        final ConstraintViolationException exception = assertThrows(ConstraintViolationException.class,
+                () -> Score.builder()
+                        .team1("Barcelona")
+                        .team2("Steaua")
+                        .date(LocalDate.now())
+                        .goals1((byte) 3)
+                        .goals2((byte) -1)
+                        .build());
 
-        Score.builder()
-                .team1("Barcelona")
-                .team2("Steaua")
-                .date(LocalDate.now())
-                .goals1((byte) 3)
-                .goals2((byte) -1)
-                .build();
-
+        assertThat(exception.getConstraintViolations().stream().findFirst().get().getMessage(),
+                equalTo("ro.micsa.scores.validation.negative_goals2"));
     }
 
 }

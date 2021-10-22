@@ -3,7 +3,7 @@ version: '3'
 services:
   scores-microservice:
     build: ..
-    image: gmicsa/scores-microservice:0.0.2
+    image: gmicsa/scores-microservice:0.0.3
     ports:
      - "8080:8080"
     environment:
@@ -14,7 +14,7 @@ services:
     - mongodb
     restart: always
   mongodb:
-    image: mongo:3.7.1
+    image: mongo:5.0.3
     volumes:
      - /data/db:/data/db
     ports:

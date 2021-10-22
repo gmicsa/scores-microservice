@@ -1,17 +1,16 @@
 package ro.micsa.scores.repository;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ro.micsa.scores.domain.Score;
-import ro.micsa.scores.domain.ScoreTestBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.Optional;
 
 import static ro.micsa.scores.domain.ScoreTestBuilder.buildScore;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataMongoTest
 public class ScoresRepositoryTest {
 
@@ -29,8 +28,8 @@ public class ScoresRepositoryTest {
     private Score score1;
     private Score score2;
 
-    @Before
-    public void setup(){
+    @BeforeEach
+    public void setup() {
         Mono<Void> deleteAllMono = scoresRepository.deleteAll();
         StepVerifier.create(deleteAllMono).verifyComplete();
 
@@ -106,7 +105,7 @@ public class ScoresRepositoryTest {
 
         Assertions.assertThat(scores).containsExactly(score2);
     }
-    
+
     @Test
     public void find_filterByFromUntilAndTeam_noScoreMatched() {
         ScoresFilter filter = new ScoresFilter();
@@ -118,7 +117,7 @@ public class ScoresRepositoryTest {
 
         Assertions.assertThat(scores).isEmpty();
     }
-    
+
     @Test
     public void find_filterByFromUntil() {
         ScoresFilter filter = new ScoresFilter();
