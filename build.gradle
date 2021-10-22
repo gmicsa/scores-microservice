@@ -1,72 +1,63 @@
-buildscript {
-    ext {
-        springBootVersion = '2.0.0.M7'
-    }
-    repositories {
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath('se.transmode.gradle:gradle-docker:1.2')
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
-    }
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.5.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.gorylenko.gradle-git-properties' version '2.3.1'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'docker'
-apply plugin: "com.gorylenko.gradle-git-properties"
-
 group = 'gmicsa'
-version = '0.0.2'
-sourceCompatibility = 10
-targetCompatibility = 10
+version = '0.0.3'
+sourceCompatibility = '17'
 
-jar {
-    baseName = 'scores-microservice'
+ext {
+    lombokVer = '1.18.22'
 }
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.spring.io/snapshot" }
-    maven { url "https://repo.spring.io/milestone" }
-}
-
-springBoot  {
-    buildInfo()
 }
 
 dependencies {
-    compile('javax.xml.bind:jaxb-api:2.3.0')
-    compile('javax.el:javax.el-api:3.0.0')
-    compile('org.glassfish:javax.el:3.0.0')
-    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.6')
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-    compile('org.springframework.boot:spring-boot-starter-webflux')
-    runtime('org.springframework.boot:spring-boot-devtools')
-//    compileOnly('org.projectlombok:lombok:1.16.21')
-    compile files('libs/lombok-1.16.21.jar')  //TODO please remove this as soon as latest Lombok jar in on Maven central
+    compileOnly "org.projectlombok:lombok:$lombokVer"
+    annotationProcessor "org.projectlombok:lombok:${lombokVer}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVer}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVer}"
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('io.projectreactor:reactor-test')
-    testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+    implementation 'org.hibernate:hibernate-validator:6.0.13.Final'
+    implementation 'org.glassfish:javax.el:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
-task buildDocker(type: Docker, dependsOn: build) {
-    // push = true
-    applicationName = jar.baseName
-    dockerfile = file('Dockerfile')
-    doFirst {
-        copy {
-            from jar
-            into stageDir
-        }
-    }
+test {
+    useJUnitPlatform()
 }
+
+
+//buildscript {
+//    dependencies {
+//        classpath('se.transmode.gradle:gradle-docker:1.2')
+//    }
+//}
+//
+//apply plugin: 'docker'
+//
+//
+//task buildDocker(type: Docker, dependsOn: build) {
+//    // push = true
+//    applicationName = jar.baseName
+//    dockerfile = file('Dockerfile')
+//    doFirst {
+//        copy {
+//            from jar
+//            into stageDir
+//        }
+//    }
+//}

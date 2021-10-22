@@ -38,7 +38,7 @@ class ScoresRepositoryImpl implements ScoresRepositoryCustom {
             query.addCriteria(criteria);
         }
 
-        query.with(new Sort(Sort.Direction.DESC, "date"));
+        query.with(Sort.by(Sort.Direction.DESC, "date"));
 
         return mongoTemplate.find(query, Score.class);
     }

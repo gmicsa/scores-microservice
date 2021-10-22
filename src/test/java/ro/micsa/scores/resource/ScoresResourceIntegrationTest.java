@@ -1,44 +1,41 @@
 package ro.micsa.scores.resource;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import ro.micsa.scores.domain.Score;
-import ro.micsa.scores.domain.ScoreTestBuilder;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ro.micsa.scores.domain.ScoreTestBuilder.buildScore;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ScoresResourceIntegrationTest {
 
     private static final String SCORES_BASE_URL = "http://localhost:8080/api/scores";
-
-    private static WebClient webClient = WebClient.create(SCORES_BASE_URL);
+    private static final WebClient webClient = WebClient.create(SCORES_BASE_URL);
 
     @Autowired
-    private ReactiveMongoOperations reactiveMongoOperations;
+    private ReactiveMongoOperations mongo;
 
 
-    @Before
+    @BeforeEach
     public void deleteAllScores() {
-        Mono<Void> dropResult = reactiveMongoOperations.dropCollection(Score.class);
+        Mono<Void> dropResult = mongo.dropCollection(Score.class);
         StepVerifier.create(dropResult).verifyComplete();
     }
 
@@ -48,42 +45,45 @@ public class ScoresResourceIntegrationTest {
 
         Score scoreDinamoForesta = buildScore("Dinamo", "Foresta", 4, 5);
 
-        Flux<Score> insertedScores = reactiveMongoOperations.insertAll(List.of(scoreBarcaSteaua, scoreDinamoForesta));
+        Flux<Score> insertedScores = mongo.insertAll(List.of(scoreBarcaSteaua, scoreDinamoForesta));
         StepVerifier.create(insertedScores).expectNextCount(2).verifyComplete();
 
-        ClientResponse response = webClient
+        ResponseEntity<List<Score>> response = webClient
                 .get()
                 .uri(builder -> builder.queryParam("team", "Steaua").build())
-                .exchange()
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<List<Score>>() {
+                })
                 .block();
-        List<Score> scores = response.bodyToMono(new ParameterizedTypeReference<List<Score>>(){}).block();
 
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(scores).containsOnly(scoreBarcaSteaua);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).containsOnly(scoreBarcaSteaua);
     }
 
     @Test
     public void saveScore() {
         Score scoreToBeCreated = buildScore("Team1", "Team2", 1, 0);
 
-        ClientResponse response = webClient
+        ResponseEntity<Score> response = webClient
                 .post()
                 .body(Mono.just(scoreToBeCreated), Score.class)
-                .exchange()
+                .retrieve()
+                .toEntity(Score.class)
                 .block();
 
-        Score createdScore = response.bodyToMono(Score.class).block();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(createdScore.getId()).isNotNull();
-        assertThat(createdScore).isEqualToIgnoringGivenFields(scoreToBeCreated, "id");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getId()).isNotNull();
+        assertThat(response.getBody())
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(scoreToBeCreated);
     }
 
     @Test
     public void updateScore() {
         Score scoreToSaveInDb = buildScore("Barcelona", "Steaua", 3, 2);
-        Score scoreFromDb = reactiveMongoOperations.insert(scoreToSaveInDb).block();
+        Score scoreFromDb = mongo.insert(scoreToSaveInDb).block();
 
         Score updatedScore = Score
                 .builder()
@@ -95,49 +95,49 @@ public class ScoresResourceIntegrationTest {
                 .date(scoreFromDb.getDate())
                 .build();
 
-        ClientResponse response = webClient
+        ResponseEntity<Score> response = webClient
                 .put()
                 .uri(URI.create(SCORES_BASE_URL + "/" + scoreFromDb.getId()))
                 .body(Mono.just(updatedScore), Score.class)
-                .exchange()
+                .retrieve()
+                .toEntity(Score.class)
                 .block();
-        Score updatedScoreResponse = response.bodyToMono(Score.class).block();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(updatedScoreResponse).isEqualTo(updatedScore);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(updatedScore);
     }
 
     @Test
     public void findById() {
         Score scoreToSaveInDb = buildScore("Barcelona", "Steaua", 3, 2);
-        Score scoreFromDb = reactiveMongoOperations.insert(scoreToSaveInDb).block();
+        Score scoreFromDb = mongo.insert(scoreToSaveInDb).block();
 
-        ClientResponse response = webClient
+        ResponseEntity<Score> response = webClient
                 .get()
                 .uri(URI.create(SCORES_BASE_URL + "/" + scoreFromDb.getId()))
-                .exchange()
+                .retrieve()
+                .toEntity(Score.class)
                 .block();
 
-        Score scoreResponse = response.bodyToMono(Score.class).block();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(scoreResponse).isEqualTo(scoreFromDb);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(scoreFromDb);
     }
 
     @Test
     public void givenOneScoreInDb_whenDeletingScore_noScoreRemainsInDb() {
         Score scoreToSaveInDb = buildScore("Barcelona", "Steaua", 3, 2);
-        Score scoreFromDb = reactiveMongoOperations.insert(scoreToSaveInDb).block();
+        Score scoreFromDb = mongo.insert(scoreToSaveInDb).block();
 
-        ClientResponse response = webClient
+        ResponseEntity<Void> response = webClient
                 .delete()
                 .uri(URI.create(SCORES_BASE_URL + "/" + scoreFromDb.getId()))
-                .exchange()
+                .retrieve()
+                .toEntity(Void.class)
                 .block();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        Flux<Score> allScores = reactiveMongoOperations.findAll(Score.class);
+        Flux<Score> allScores = mongo.findAll(Score.class);
         StepVerifier.create(allScores).expectComplete();
     }
 }

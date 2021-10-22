@@ -1,6 +1,6 @@
 # scores-microservice
 
-A reactive microservice for managing football scores developed with Spring Boot 2, Spring WebFlux, Spring Data Reactive Repositories and backed by MongoDB.
+A reactive microservice for managing football scores developed with Java 17, Spring Boot 2.5, Spring WebFlux, Spring Data Reactive Repositories and backed by MongoDB.
 
 Run locally:
 -
