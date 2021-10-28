@@ -14,8 +14,8 @@ import {Score, ScoreFilter} from '../score.model';
 export class ScoresListComponent implements OnInit, OnDestroy {
   public scores: Score[];
   private subscription: Subscription;
-  private showSearchPanel: boolean = false;
-  private filter = new ScoreFilter(null, null, null);
+  public showSearchPanel: boolean = false;
+  public filter = new ScoreFilter(null, null, null);
 
   constructor(private router: Router, private scoresService : ScoresService) {
 

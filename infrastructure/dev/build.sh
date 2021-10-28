@@ -7,7 +7,7 @@ rm -Rf scores-frontend/dist
 
 echo 'Building Angular app'
 cd scores-frontend
-ng build -prod
+ng build --prod
 
 cd ..
 
@@ -16,7 +16,7 @@ mkdir -p build/resources/main/static
 cp -r scores-frontend/dist/* build/resources/main/static
 
 echo 'Building Spring Boot app'
-./gradlew build buildDocker
+./gradlew build docker
 
 echo 'Tagging GCR image'
-docker tag gmicsa/scores-microservice:0.0.2 gcr.io/scores-microservice/scores-microservice:0.0.2
+docker tag gmicsa/scores-microservice:0.0.3 gcr.io/scores-microservice/scores-microservice:0.0.3
