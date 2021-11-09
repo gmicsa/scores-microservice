@@ -15,6 +15,9 @@ echo 'Copy Angular resources'
 mkdir -p build/resources/main/static
 cp -r scores-frontend/dist/* build/resources/main/static
 
+echo 'Use Docker daemon from Minikube in order to have access to this image from Minikube'
+eval $(minikube docker-env)
+
 echo 'Building Spring Boot app'
 ./gradlew build docker
 
