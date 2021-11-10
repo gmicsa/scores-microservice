@@ -23,7 +23,8 @@ Docker Compose is used to run app composed by Spring Web and MongoDB containers 
 - Run `./create-volumes.sh`. This will create the volume and volume claim needed by Mongo so that data is persisted even if you recreate Mongo container.
 - Run `./start.sh`. This will create deployments and services for the scores microservice and Mongo DB
 - Run `kubectl get all` to check everything started ok
-- Run `minikube service scores-microservice-service` to access the frontend. Enjoy!
+- Run `minikube tunnel` to create a tunnel to our service
+- Access frontend at `http://localhost:8080/scores` Enjoy!
 - To clean-up resources, you can run: `./destroy-all.sh` (this will remove services and deployments) and `destroy-volumes.sh` (this will remove volumes, your saved data will be lost)
 
 

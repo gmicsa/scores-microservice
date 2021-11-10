@@ -27,10 +27,8 @@ kind: Service
 metadata:
   name: scores-microservice-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 8080
+  - port: 8080
   selector:
     app: scores-microservice
